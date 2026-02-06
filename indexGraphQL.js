@@ -8,7 +8,7 @@ const CollibraGraphQLExporter = require('./collibraGraphQLExporter');
 const displayWelcome = () => {
   console.clear();
   console.log('╔════════════════════════════════════════╗');
-  console.log('║   Collibra Community Export Tool      ║');
+  console.log('║   Collibra Community Export Tool       ║');
   console.log('║          REST API + GraphQL            ║');
   console.log('╚════════════════════════════════════════╝\n');
 };
