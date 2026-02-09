@@ -1,6 +1,7 @@
 const axios = require('axios');
 const fs = require('fs');
 const path = require('path');
+const https = require('https');
 
 class CollibraClient {
   constructor() {
@@ -23,11 +24,16 @@ class CollibraClient {
   async authenticate() {
     try {
       // Test connectivity using Basic Auth
+      const agent = new https.Agent({rejectUnauthorized: false});
       const response = await axios.post(
         `https://${this.config.domain}/rest/2.0/auth/sessions`,
         {
           username: this.config.username,
           password: this.config.password
+        },
+        {
+          httpsAgent: agent, 
+          proxy: false
         }
       );
       console.log('✓ Authenticated successfully');
@@ -44,11 +50,14 @@ class CollibraClient {
 
   async makeRequest(endpoint, params = {}) {
     try {
+      const agent = new https.Agent({rejectUnauthorized: false});
       const response = await axios.get(`${this.config.apiURL}${endpoint}`, {
         params,
         headers: {
           'Authorization': this.authHeader
-        }
+        },
+        httpsAgent: agent, 
+        proxy: false
       });
       return response.data;
     } catch (error) {
@@ -64,6 +73,7 @@ class CollibraClient {
 
   async makeGraphQLRequest(query, variables = {}) {
     try {
+      const agent = new https.Agent({rejectUnauthorized: false});
       const response = await axios.post(
         this.config.graphURL,
         { query, variables },
@@ -71,7 +81,9 @@ class CollibraClient {
           headers: {
             'Authorization': this.authHeader,
             'Content-Type': 'application/json'
-          }
+          },
+          httpsAgent: agent, 
+          proxy: false
         }
       );
       return response.data;

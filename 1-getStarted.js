@@ -2,6 +2,7 @@ const fs = require('fs');
 const readline = require('readline');
 const axios = require('axios');
 const path = require('path');
+const https = require('https');
 
 const configPath = path.join(__dirname, 'config.json');
 let rl;  // Declare rl outside, so it's not duplicated.
@@ -18,7 +19,8 @@ const question = (query) => new Promise((resolve) => {
 
 const testConnectivity = async (domain, username, password) => {
   try {
-    const response = await axios.post(`https://${domain}/rest/2.0/auth/sessions`, { username, password });
+    const agent = new https.Agent({rejectUnauthorized: false});
+    const response = await axios.post(`https://${domain}/rest/2.0/auth/sessions`, { username, password }, {httpsAgent: agent, proxy: false});
     if (response.status === 200) {
       console.log('Authentication successful.');
       return true;
